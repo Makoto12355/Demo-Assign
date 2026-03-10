@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap');
+
+/* ===== Register Page CSS - Minimalist & Modern UI ===== */
+/* This specific file assumes style.css is also loaded for variables, 
+   but we include fallbacks just in case */
+:root {
+    --bg-color: #fdfdfd;
+    --text-color: #2b2b2b;
+    --text-muted: #6e6e73;
+    --primary-color: #1a1a1a;
+    --primary-hover: #333333;
+    --accent-color: #2997ff;
+    --accent-hover: #147ce5;
+    --border-color: #e5e5ea;
+    --card-bg: #ffffff;
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+    --radius-md: 12px;
+    --radius-lg: 20px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.register-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    padding: 20px;
+}
+
+.register-card {
+    background: var(--card-bg);
+    padding: 50px 40px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.register-card h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 35px;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+/* Form Styles */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: #fafafa;
+    color: var(--text-color);
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.input-group input:focus {
+    background-color: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(41, 151, 255, 0.1);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Links */
+.login-link-container {
+    text-align: center;
+    margin-top: 25px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.login-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* Back Button Styling inside Card */
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    background-color: rgba(0,0,0,0.03);
+    color: var(--primary-color);
+}
+
+/* Error message styles */
+.flash-message {
+    background-color: #fff2f2;
+    color: #ff3b30;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #ffcccc;
+}

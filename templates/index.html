@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าหลัก | DemoFull-stack</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <nav>
+        <!-- Optional logo area -->
+        <a href="#" class="nav-link"
+            style="font-weight: 600; font-size: 1.1rem; color: var(--primary-color);">DemoPlatform</a>
+
+        <div class="nav-links">
+            <a href="#" class="nav-link">ติดต่อเรา</a>
+            {% if session.get('is_admin') %}
+            <a href="{{ url_for('dashboard.admin') }}" class="nav-link">แดชบอร์ดผู้ดูแล</a>
+            {% endif %}
+
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('logout') }}" class="btn-login">ออกจากระบบ</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn-login">ลงชื่อเข้าใช้</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="hero-container">
+        <!-- Minimalist Hero Section -->
+        <h1 class="hero-title">ยินดีต้อนรับสู่ DemoFull-stack</h1>
+        <p class="hero-subtitle">Full-stack Demo เพื่อการทดสอบโดย Makoto</p>
+
+        {% if not session.get('user_id') %}
+        <a href="{{ url_for('login') }}" class="btn-primary"
+            style="padding: 14px 32px; font-size: 1.1rem;">เริ่มต้นใช้งานเลย</a>
+        {% endif %}
+    </div>
+</body>
+
+</html>

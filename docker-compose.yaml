@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  web-api:
+    build: .
+    container_name: flask_app_ui
+    ports:
+      - "8083:8083"
+    env_file:
+      - .env  
+    restart: always

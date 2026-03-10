@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าผู้ดูแลระบบ | Dashboard</title>
+    <!-- Link to the external CSS correctly -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/adminstyle.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="{{ url_for('index') }}" class="nav-link"><i class="fas fa-home"></i> หน้าหลัก</a>
+        </div>
+        <div>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="admin-container">
+        <div class="header-section">
+            <h1><i class="fas fa-chart-line"></i> แดชบอร์ดผู้ดูแลระบบ</h1>
+            <div class="user-info">
+                <i class="fas fa-user-circle" style="color: var(--secondary-color); font-size: 24px;"></i>
+                <span>ผู้ดูแลระบบ: <strong>{{ user_id }}</strong></span>
+            </div>
+        </div>
+
+        <div class="stat-cards">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>จำนวน Log ทั้งหมด</h3>
+                    <p>{{ total or 0 }}</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+            </div>
+            <div class="stat-card blue">
+                <div class="stat-info">
+                    <h3>ผู้ใช้งานที่เข้าสู่ระบบ</h3>
+                    <p>{{ top_users|length }}</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="stat-card orange">
+                <div class="stat-info">
+                    <h3>รูปแบบการทำรายการ (Actions)</h3>
+                    <p>{{ by_action|length }}</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-pie"></i> สัดส่วนการทำรายการ (Actions)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="actionChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-bar"></i> ผู้ใช้งานสูงสุด 5 อันดับแรก</h3>
+                <div class="chart-wrapper">
+                    <canvas id="usersChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h3><i class="fas fa-list-alt"></i> รายการ Log ล่าสุด</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="20%">เวลา</th>
+                        <th width="20%">ผู้ใช้</th>
+                        <th width="40%">Path</th>
+                        <th width="20%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td><i class="far fa-clock" style="color: var(--text-muted); margin-right: 5px;"></i> {{ log.timestamp }}</td>
+                        <td><strong>{{ log.user_id }}</strong></td>
+                        <td><span class="code-path">{{ log.path }}</span></td>
+                        <td><span class="badge">{{ log.action }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 30px; color: var(--text-muted);">ไม่มีข้อมูล log ในระบบ</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        // Use safer JSON conversion from Jinja variables to Javascript
+        const byActionData = {{ by_action | tojson | safe }};
+        const actionLabels = Object.keys(byActionData);
+        const actionData = Object.values(byActionData);
+
+        if(actionLabels.length > 0) {
+            const ctxAction = document.getElementById('actionChart').getContext('2d');
+            new Chart(ctxAction, {
+                type: 'doughnut',
+                data: {
+                    labels: actionLabels,
+                    datasets: [{
+                        label: 'จำนวนรายการ',
+                        data: actionData,
+                        backgroundColor: [
+                            '#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6', '#34495e', '#1abc9c', '#e67e22'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // topUsers is a list of tuples in Python, which becomes an array of arrays in JS [[uid, count], ...]
+        const topUsers = {{ top_users | tojson | safe }};
+        const usersLabels = topUsers.map(u => u[0]);
+        const usersData = topUsers.map(u => u[1]);
+
+        if(usersLabels.length > 0) {
+            const ctxUsers = document.getElementById('usersChart').getContext('2d');
+            new Chart(ctxUsers, {
+                type: 'bar',
+                data: {
+                    labels: usersLabels,
+                    datasets: [{
+                        label: 'จำนวนครั้งที่ทำรายการ',
+                        data: usersData,
+                        backgroundColor: '#3498db',
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: {
+                                borderDash: [2, 4],
+                                color: '#ebedef'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
