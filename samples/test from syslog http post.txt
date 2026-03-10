@@ -1,0 +1,32 @@
+2026-03-11 00:26:33,403 INFO __main__: nav user=anonymous path=/log
+2026-03-11 00:26:34,430 INFO __main__: access user=anonymous path=/log action=view meta=None
+/home/mamokalinux/P3-work/Assign-P3/Demo-Assign/main.py:69: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  'timestamp': str(datetime.utcnow())
+2026-03-11 00:26:35,365 INFO __main__: Received log notification: {'timestamp': '2026-03-10T17:26:33Z', 'level': 'INFO', 'service': 'auth-service', 'message': 'User login successful', 'host': 'mamokalinux-ASUS-TUF'}
+2026-03-11 00:26:35,791 INFO werkzeug: 127.0.0.1 - - [11/Mar/2026 00:26:35] "POST /log HTTP/1.1" 200 -
+
+this is log from syslog.sh
+
+* Connected to localhost (127.0.0.1) port 8083
+> POST /log HTTP/1.1
+> Host: localhost:8083
+> User-Agent: curl/8.5.0
+> Accept: */*
+> Content-Type: application/json
+> Authorization: Bearer your_secret_token
+> Content-Length: 161
+> 
+< HTTP/1.1 200 OK
+< Server: Werkzeug/3.1.6 Python/3.12.9
+< Date: Tue, 10 Mar 2026 17:26:36 GMT
+< Content-Type: application/json
+< Content-Length: 21
+< Vary: Cookie
+< Connection: close
+< 
+{
+  "status": "ok"
+}
+* Closing connection
+
+Done.

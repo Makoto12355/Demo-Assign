@@ -1,0 +1,16 @@
+[200] Sent log: 172.16.0.194 -> DROP
+[200] Sent log: 172.16.0.25 -> REJECT
+[200] Sent log: 172.16.0.211 -> DROP
+[200] Sent log: 172.16.0.127 -> ACCEPT
+[200] Sent log: 172.16.0.220 -> REJECT
+[200] Sent log: 172.16.0.75 -> DROP
+[200] Sent log: 172.16.0.180 -> DROP
+[200] Sent log: 172.16.0.120 -> DROP
+[200] Sent log: 172.16.0.189 -> REJECT
+[200] Sent log: 172.16.0.74 -> REJECT
+[200] Sent log: 172.16.0.204 -> REJECT
+[200] Sent log: 172.16.0.120 -> REJECT
+[200] Sent log: 172.16.0.26 -> DROP
+[200] Sent log: 172.16.0.106 -> REJECT
+
+firewall log from apilog.py

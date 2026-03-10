@@ -1,37 +1,36 @@
 import requests
-import datetime
-import json
+import random
 import time
+from datetime import datetime
 
-# --- Configuration ---
-ENDPOINT = "http://localhost:8083/log"
-HEADERS = {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer your_secret_token"
-}
+URL = "http://localhost:8083/log"
 
-def send_test_log(level="INFO", message="Test log message"):
-    payload = {
-        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-        "level": level,
-        "message": message,
-        "metadata": {
-            "source": "python-tester",
-            "type": "api_test"
-        }
+def generate_firewall_log():
+    actions = ["ACCEPT", "DROP", "REJECT"]
+    protocols = ["TCP", "UDP", "ICMP"]
+    
+    return {
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "device_id": "FW-CORE-01",
+        "facility": "authpriv",
+        "level": random.choice(["info", "warning", "critical"]),
+        "src_addr": f"172.16.0.{random.randint(1, 254)}",
+        "dst_addr": f"8.8.8.{random.randint(1, 8)}",
+        "proto": random.choice(protocols),
+        "action": random.choice(actions),
+        "bytes_sent": random.randint(100, 5000),
+        "msg": "Inbound connection attempt"
     }
 
-    try:
-        response = requests.post(ENDPOINT, headers=HEADERS, json=payload)
-        response.raise_for_status() # เช็คว่า Error 4xx/5xx หรือไม่
-        print(f"[{response.status_code}] Sent: {message}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-
 if __name__ == "__main__":
-    # ทดสอบยิง 5 ครั้ง ทุกๆ 1 วินาที
-    levels = ["INFO", "WARNING", "ERROR"]
-    for i in range(5):
-        msg = f"Automatic test log sequence #{i+1}"
-        send_test_log(level=levels[i % 3], message=msg)
-        time.sleep(1)
+    print("Starting Firewall Syslog Generator...")
+    try:
+        while True:
+            log_data = generate_firewall_log()
+            res = requests.post(URL, json=log_data)
+            print(f"[{res.status_code}] Sent log: {log_data['src_addr']} -> {log_data['action']}")
+            
+            # ปรับความเร็วตรงนี้ (เช่น 0.5 คือส่งทุกครึ่งวินาที)
+            time.sleep(0.5) 
+    except KeyboardInterrupt:
+        print("\nStopped by user.")
